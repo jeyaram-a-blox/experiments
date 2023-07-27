@@ -74,8 +74,9 @@ func getStart(len, chunk int) []int {
 
 func searchLinearOptimzed(props []*Property, min, max int, builder string) {
 	start := time.Now()
-	chunk := len(props) / 10
-	job := gocommons.NewTransformer[int, int](10, getStart(len(props), chunk), func(i int) (int, error) {
+	parallelism := 20
+	chunk := len(props) / parallelism
+	job := gocommons.NewTransformer[int, int](uint(parallelism), getStart(len(props), chunk), func(i int) (int, error) {
 		count := 0
 		for j := i; j < (i + chunk); j++ {
 			if props[j].MinPrice >= min && props[j].MaxPrice <= max && props[j].Builder == builder {
